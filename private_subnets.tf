@@ -1,32 +1,38 @@
 resource "aws_subnet" "private_subnet_1a" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.0.0/20"
-  availability_zone = format("%sa", var.region)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.0.0/20"
+  # availability_zone = format("%sa", var.region)
+  availability_zone = "${var.region}a"
 
   tags = {
-    Name     = format("%s_private_subnet_1a", var.project_name)
+    # Name     = format("%s_private_subnet_1a", var.project_name)
+    Name     = "${var.project_name}-private-subnet-1a"
     Resource = "subnet"
   }
 }
 
 resource "aws_subnet" "private_subnet_1b" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.16.0/20"
-  availability_zone = format("%sb", var.region)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.16.0/20"
+  # availability_zone = format("%sb", var.region)
+  availability_zone = "${var.region}b"
 
   tags = {
-    Name     = format("%s_private_subnet_1b", var.project_name)
+    # Name     = format("%s_private_subnet_1b", var.project_name)
+    Name     = "${var.project_name}-private-subnet-1b"
     Resource = "subnet"
   }
 }
 
 resource "aws_subnet" "private_subnet_1c" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.32.0/20"
-  availability_zone = format("%sc", var.region)
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.32.0/20"
+  # availability_zone = format("%sc", var.region)
+  availability_zone = "${var.region}c"
 
   tags = {
-    Name     = format("%s_private_subnet_1c", var.project_name)
+    # Name     = format("%s_private_subnet_1c", var.project_name)
+    Name     = "${var.project_name}-private-subnet-1c"
     Resource = "subnet"
   }
 }
@@ -35,7 +41,8 @@ resource "aws_route_table" "private_internet_access_1a" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name     = format("%s_private_internet_access_1a", var.project_name)
+    # Name     = format("%s_private_internet_access_1a", var.project_name)
+    Name     = "${var.project_name}-private-internet-access-1a"
     Resource = "route_table"
   }
 }
@@ -44,7 +51,8 @@ resource "aws_route_table" "private_internet_access_1b" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name     = format("%s_private_internet_access_1b", var.project_name)
+    # Name     = format("%s_private_internet_access_1b", var.project_name)
+    Name     = "${var.project_name}-private-internet-access-1b"
     Resource = "route_table"
   }
 }
@@ -53,7 +61,8 @@ resource "aws_route_table" "private_internet_access_1c" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name     = format("%s_private_internet_access_1c", var.project_name)
+    # Name     = format("%s_private_internet_access_1c", var.project_name)
+    Name     = "${var.project_name}-private-internet-access-1c"
     Resource = "route_table"
   }
 }
