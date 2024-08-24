@@ -61,19 +61,19 @@ resource "aws_route_table" "private_internet_access_1c" {
 resource "aws_route" "private_route_1a" {
   route_table_id         = aws_route_table.private_internet_access_1a.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_nat_gateway.nat_gw_1a.id
+  nat_gateway_id         = aws_nat_gateway.nat_gw_1a.id
 }
 
 resource "aws_route" "private_route_1b" {
   route_table_id         = aws_route_table.private_internet_access_1b.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_nat_gateway.nat_gw_1b.id
+  nat_gateway_id         = aws_nat_gateway.nat_gw_1b.id
 }
 
 resource "aws_route" "private_route_1c" {
   route_table_id         = aws_route_table.private_internet_access_1c.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_nat_gateway.nat_gw_1c.id
+  nat_gateway_id         = aws_nat_gateway.nat_gw_1c.id
 }
 
 resource "aws_route_table_association" "private_rta_1a" {
