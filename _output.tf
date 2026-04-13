@@ -1,19 +1,19 @@
 output "vpc_id" {
-  value = aws_vpc.main.id
+  value = module.vpc.vpc_id
 }
 
 output "vpc_cidr_block" {
-  value = aws_vpc.main.cidr_block
+  value = module.vpc.cidr_block
 }
 
 output "private_subnet_ids" {
-  value = { for az in local.aws_vpc_azs : az => aws_subnet.these_private[az].id }
+  value = module.vpc.private_subnet_ids
 }
 
 output "public_subnet_ids" {
-  value = { for az in local.aws_vpc_azs : az => aws_subnet.these_public[az].id }
+  value = module.vpc.public_subnet_ids
 }
 
 output "data_subnet_ids" {
-  value = { for az in local.aws_vpc_azs : az => aws_subnet.these_data[az].id }
+  value = module.vpc.data_subnet_ids
 }
