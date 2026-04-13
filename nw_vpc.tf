@@ -22,7 +22,7 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${local.workspace.project_name}--vpc"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--vpc"
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${local.workspace.project_name}--igw"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--igw"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_eip" "eip" {
   domain = "vpc"
 
   tags = {
-    Name = "${local.workspace.project_name}--eip-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--eip-${each.key}"
   }
 }
 
@@ -51,7 +51,7 @@ resource "aws_nat_gateway" "natgw" {
   subnet_id     = aws_subnet.these_public[each.key].id
 
   tags = {
-    Name = "${local.workspace.project_name}--natgw-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--natgw-${each.key}"
   }
 }
 
@@ -67,7 +67,7 @@ resource "aws_subnet" "these_private" {
   cidr_block        = cidrsubnet(local.aws_vpc_subnet_private, 4, index(data.aws_availability_zones.available.names, each.key))
 
   tags = {
-    Name = "${local.workspace.project_name}--private-subnet-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--private-subnet-${each.key}"
   }
 }
 
@@ -79,7 +79,7 @@ resource "aws_subnet" "these_public" {
   cidr_block        = cidrsubnet(local.aws_vpc_subnet_public, 4, index(data.aws_availability_zones.available.names, each.key))
 
   tags = {
-    Name = "${local.workspace.project_name}--public-subnet-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--public-subnet-${each.key}"
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_subnet" "these_data" {
   cidr_block        = cidrsubnet(local.aws_vpc_subnet_data, 4, index(data.aws_availability_zones.available.names, each.key))
 
   tags = {
-    Name = "${local.workspace.project_name}--data-subnet-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--data-subnet-${each.key}"
   }
 }
 
@@ -105,7 +105,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${local.workspace.project_name}--private-rt-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--private-rt-${each.key}"
   }
 }
 
@@ -141,7 +141,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${local.workspace.project_name}--public-rt-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--public-rt-${each.key}"
   }
 }
 
@@ -173,6 +173,6 @@ resource "aws_vpc_endpoint" "these" {
   route_table_ids   = [for rt in aws_route_table.private : rt.id]
 
   tags = {
-    Name = "${local.workspace.project_name}--vpce-${each.key}"
+    Name = "${terraform.workspace}--${local.workspace.project_name}--vpce-${each.key}"
   }
 }
