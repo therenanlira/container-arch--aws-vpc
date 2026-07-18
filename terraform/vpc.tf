@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../container-arch--aws-ecs-module/network"
+  source = "git@github.com:therenanlira/container-arch--aws-ecs-module//network?ref=v1.4.0"
 
   project_name = local.workspace.project_name
   environment  = local.workspace.environment
