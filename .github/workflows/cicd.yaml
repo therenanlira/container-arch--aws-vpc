@@ -1,0 +1,50 @@
+name: CI/CD
+
+on:
+  # PR dev -> main: deploy dev, validate prd (CI only)
+  pull_request:
+    branches: [main]
+  # push / merge to main: deploy prd
+  push:
+    branches: [main]
+
+jobs:
+  # PR dev -> main : full pipeline for dev, including deploy.
+  dev:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/pipeline.yaml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      aws_env: dev
+      aws_account: "150100906110"
+      aws_region: us-east-2
+      deploy: true
+
+  # # PR dev -> main : validate prd only (lint, validate, plan). No artifact
+  # # upload and no CD, since prd is deployed later, on push to main.
+  # prd-validate:
+  #   if: github.event_name == 'pull_request'
+  #   uses: ./.github/workflows/pipeline.yaml
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   with:
+  #     aws_env: prd
+  #     aws_account: "150100906110"
+  #     aws_region: us-east-2
+  #     deploy: false
+
+  # # push / merge to main : full pipeline for prd, including deploy.
+  # prd:
+  #   if: github.event_name == 'push'
+  #   uses: ./.github/workflows/pipeline.yaml
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   with:
+  #     aws_env: prd
+  #     aws_account: "150100906110"
+  #     aws_region: us-east-2
+  #     deploy: true
