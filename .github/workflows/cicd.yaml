@@ -9,9 +9,8 @@ on:
     branches: [main]
 
 jobs:
-  # PR dev -> main : full pipeline for dev, including deploy.
+  # Dev always deploys: on PR dev -> main and again on push/merge to main.
   dev:
-    if: github.event_name == 'pull_request'
     uses: ./.github/workflows/pipeline.yaml
     permissions:
       id-token: write
