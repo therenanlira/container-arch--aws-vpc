@@ -37,6 +37,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.13"
+          # The wrapper does not propagate terraform's real exit code to the
+          # shell, which breaks -detailed-exitcode checks.
+          terraform_wrapper: false
 
       - name: Terraform Init (no backend)
         run: terraform init -backend=false
@@ -70,6 +73,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.13"
+          # The wrapper does not propagate terraform's real exit code to the
+          # shell, which breaks -detailed-exitcode checks.
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init
@@ -128,6 +134,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: "~> 1.13"
+          # The wrapper does not propagate terraform's real exit code to the
+          # shell, which breaks -detailed-exitcode checks.
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init
