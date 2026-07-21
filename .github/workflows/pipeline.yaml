@@ -150,5 +150,23 @@ jobs:
           name: tfplan
           path: terraform
 
+      - name: Pre-deploy hook
+        # Runs ci/pre_deploy.sh if this repo provides one; a no-op otherwise,
+        # keeping this shared template generic across repos.
+        run: |
+          if [ -f "../ci/pre_deploy.sh" ]; then
+            bash ../ci/pre_deploy.sh
+          else
+            echo "No ci/pre_deploy.sh found, skipping."
+          fi
+
       - name: Terraform Apply
         run: terraform apply -auto-approve plan.tfplan
+
+      - name: Post-deploy hook
+        run: |
+          if [ -f "../ci/post_deploy.sh" ]; then
+            bash ../ci/post_deploy.sh
+          else
+            echo "No ci/post_deploy.sh found, skipping."
+          fi
