@@ -1,6 +1,8 @@
 locals {
   workspace = var.workspaces[terraform.workspace]
 
+  central_workspace = "${local.workspace.environment}-${local.workspace.central_region}"
+
   tags = {
     Project     = local.workspace.project_name
     Region      = local.workspace.aws_region

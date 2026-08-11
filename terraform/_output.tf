@@ -25,3 +25,11 @@ output "dns_zone_id" {
 output "dns_name" {
   value = module.vpc.dns_name
 }
+
+output "private_route_table_ids" {
+  value = module.vpc.private_route_table_ids
+}
+
+output "public_route_table_ids" {
+  value = module.vpc.public_route_table_ids
+}

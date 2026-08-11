@@ -10,29 +10,34 @@ on:
 
 env:
   AWS_ACCOUNT: "150100906110"
-  AWS_REGION: us-east-2
-  AWS_ENV: dev
 
 jobs:
-  # Builds a destroy plan and reports whether there is anything to destroy.
-  check:
-    name: Check for resources
+  # Plans the destroy and applies it only when the workspace has resources.
+  destroy:
+    name: Destroy ${{ matrix.aws_env }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - aws_env: dev-us-east-2
+            aws_region: us-east-2
+          - aws_env: dev-us-east-1
+            aws_region: us-east-1
     permissions:
       id-token: write
       contents: read
     defaults:
       run:
         working-directory: terraform
-    outputs:
-      has_resources: ${{ steps.plan.outputs.has_resources }}
     steps:
       - uses: actions/checkout@v5
 
       - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/github-oidc-role
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ matrix.aws_region }}
 
       - uses: hashicorp/setup-terraform@v4
         with:
@@ -45,7 +50,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Workspace Select
-        run: terraform workspace select -or-create ${{ env.AWS_ENV }}
+        run: terraform workspace select -or-create ${{ matrix.aws_env }}
 
       - name: Terraform Plan (destroy)
         id: plan
@@ -66,52 +71,6 @@ jobs:
             echo "has_resources=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Upload Destroy Plan
-        if: steps.plan.outputs.has_resources == 'true'
-        uses: actions/upload-artifact@v6
-        with:
-          name: destroy-tfplan
-          path: terraform/destroy.tfplan
-          retention-days: 1
-
-  # Applies the destroy plan; only runs when check found something.
-  destroy:
-    name: Destroy resources
-    runs-on: ubuntu-latest
-    needs: [check]
-    if: needs.check.outputs.has_resources == 'true'
-    permissions:
-      id-token: write
-      contents: read
-    defaults:
-      run:
-        working-directory: terraform
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: aws-actions/configure-aws-credentials@v6
-        with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/github-oidc-role
-          aws-region: ${{ env.AWS_REGION }}
-
-      - uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: "~> 1.13"
-          # The wrapper does not propagate terraform's real exit code to the
-          # shell, which breaks -detailed-exitcode checks.
-          terraform_wrapper: false
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Workspace Select
-        run: terraform workspace select -or-create ${{ env.AWS_ENV }}
-
-      - name: Download Destroy Plan
-        uses: actions/download-artifact@v7
-        with:
-          name: destroy-tfplan
-          path: terraform
-
       - name: Terraform Apply (destroy)
+        if: steps.plan.outputs.has_resources == 'true'
         run: terraform apply -auto-approve destroy.tfplan

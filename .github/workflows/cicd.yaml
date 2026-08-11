@@ -11,14 +11,23 @@ on:
 jobs:
   # Dev always deploys: on PR dev -> main and again on push/merge to main.
   dev:
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - aws_env: dev-us-east-1
+            aws_region: us-east-1
+          - aws_env: dev-us-east-2
+            aws_region: us-east-2
     uses: ./.github/workflows/pipeline.yaml
     permissions:
       id-token: write
       contents: read
     with:
-      aws_env: dev
+      aws_env: ${{ matrix.aws_env }}
       aws_account: "150100906110"
-      aws_region: us-east-2
+      aws_region: ${{ matrix.aws_region }}
       deploy: true
 
   # # PR dev -> main : validate prd only (lint, validate, plan). No artifact
