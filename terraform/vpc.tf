@@ -4,6 +4,6 @@ module "vpc" {
   project_name = local.workspace.project_name
   environment  = local.workspace.environment
 
-  cidr_block   = "10.0.0.0/16"
+  cidr_block   = local.workspace.cidr_block
   subnet_count = 3
 }

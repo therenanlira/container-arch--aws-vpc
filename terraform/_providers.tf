@@ -15,3 +15,12 @@ provider "aws" {
     tags = local.tags
   }
 }
+
+provider "aws" {
+  alias               = "central"
+  allowed_account_ids = local.workspace.allowed_accounts
+  region              = local.workspace.central_region
+  default_tags {
+    tags = local.tags
+  }
+}
