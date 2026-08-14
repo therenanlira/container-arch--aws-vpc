@@ -21,10 +21,10 @@ jobs:
       max-parallel: 1
       matrix:
         include:
+          - aws_env: dev-us-west-2
+            aws_region: us-west-2
           - aws_env: dev-us-east-2
             aws_region: us-east-2
-          - aws_env: dev-us-east-1
-            aws_region: us-east-1
     permissions:
       id-token: write
       contents: read
