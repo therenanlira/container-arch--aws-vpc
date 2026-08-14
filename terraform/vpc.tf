@@ -6,4 +6,8 @@ module "vpc" {
 
   cidr_block   = local.workspace.cidr_block
   subnet_count = 3
+
+  create_dns_zone = local.workspace.is_central
+  dns_zone_id     = local.workspace.is_central ? null : data.terraform_remote_state.aws_vpc_central[0].outputs.dns_zone_id
+  dns_name        = local.workspace.is_central ? null : data.terraform_remote_state.aws_vpc_central[0].outputs.dns_name
 }
